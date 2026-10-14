@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "update": "auto",
+  "share": "manual",
+  "permissions": [
+    { "action": "read", "resource": "*.env", "effect": "allow" },
+    { "action": "read", "resource": "*.env.*", "effect": "allow" },
+    { "action": "read", "resource": ".env*", "effect": "allow" },
+    { "action": "read", "resource": "**/.env*", "effect": "allow" },
+    { "action": "read", "resource": ".env.sample", "effect": "allow" },
+    { "action": "read", "resource": "**/.env.sample", "effect": "allow" }
+  ],
+  "lsp": true
+}

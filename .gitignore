@@ -1,0 +1,9 @@
+# Local dependencies and generated package metadata
+node_modules/
+
+# Secrets and machine-local environment files
+.env
+.env.*
+!.env.example
+!.env.sample
+auth.json
