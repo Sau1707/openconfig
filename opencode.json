@@ -1,7 +1,27 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "update": "auto",
-  "share": "manual",
+  "enabled_providers": ["openai"],
+  "model": "openai/gpt-6.1-sol",
+  "small_model": "openai/gpt-6-luna",
+  "plugins": ["opencode-gpt-live"],
+  "providers": {
+    "openai": {
+      "models": {
+        "gpt-6.1-sol": {
+          "settings": {
+            "reasoningEffort": "medium"
+          }
+        },
+        "gpt-6-luna": {
+          "settings": {
+            "reasoningEffort": "medium"
+          }
+        }
+      }
+    }
+  },
+  "autoupdate": true,
+  "share": "disabled",
   "permissions": [
     { "action": "read", "resource": "*.env", "effect": "allow" },
     { "action": "read", "resource": "*.env.*", "effect": "allow" },
