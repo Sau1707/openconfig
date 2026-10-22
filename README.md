@@ -1,6 +1,6 @@
 # Openconfig
 
-personal [opencode](https://opencode.ai/) configuration
+Personal [opencode](https://opencode.ai/) configuration
 
 <br />
 
@@ -26,37 +26,18 @@ opencode debug config
 git -C ~/.config/opencode pull --ff-only
 ```
 
+<br />
+
 ## Automated cleanup
 
-Requires Bun, Git, and an authenticated OpenCode V2 installation. Run from the
-repository you want to clean up:
+Requires Bun, Git, and an authenticated OpenCode V2 installation. Run in the
+repository:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/Sau1707/openconfig/main/dist/cleanup.mjs | bun run -
 ```
 
-The single-file bundle includes the client and cleanup instructions; no checkout,
-dependency installation, or installed cleanup skill is required. The URL works
-once the bundle is published to `main`.
-
-To inspect before running, download the executable instead:
-
-```sh
-curl -fsSL https://raw.githubusercontent.com/Sau1707/openconfig/main/dist/cleanup.mjs -o /tmp/cleanup.mjs
-bun /tmp/cleanup.mjs --list
-bun /tmp/cleanup.mjs
-```
-
-Connects to the authenticated shared local OpenCode server, starting it if needed.
-Reviews non-ignored text files sequentially and automatically applies high-priority,
-high-confidence cleanup changes with session-local permission approval. Review
-your working-tree changes afterward. `--list` only lists files; `--help` shows usage.
-
-To develop and rebuild the bundle:
-
-```sh
-bun install
-bun run cleanup
-bun run build
-bun test
-```
+Runs one sequential session per deepest folder containing eligible text files.
+Ancestor folders and their direct files are not scheduled separately. Git-ignored
+files, dependencies, virtual environments, build output, caches, and lockfiles
+are skipped. Use `--list` to preview target folders without making changes.
