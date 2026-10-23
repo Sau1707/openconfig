@@ -2,7 +2,7 @@ import { afterAll, beforeAll, expect, test } from "bun:test";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { leafFolders } from "./cleanup.mjs";
+import { leafFolders, progressTree } from "./cleanup.mjs";
 
 let directory;
 let bundle;
@@ -62,7 +62,7 @@ afterAll(async () => {
   if (directory) await rm(directory, { recursive: true, force: true });
 });
 
-test("bundle lists target folders outside the checkout without a server", () => {
+test("bundle lists target folders without connecting or writing progress", async () => {
   const result = spawnSync(process.execPath, [bundle, "--list"], {
     cwd: join(directory, "repo"), encoding: "utf8",
   });
@@ -70,6 +70,7 @@ test("bundle lists target folders outside the checkout without a server", () => 
   expect(result.stdout.trim().split("\n")).toEqual([
     ".",
   ]);
+  await expect(readFile(join(directory, "repo", "cleanup.json"))).rejects.toMatchObject({ code: "ENOENT" });
 });
 
 test("batches files only in deepest eligible folders", () => {
@@ -86,6 +87,69 @@ test("batches files only in deepest eligible folders", () => {
 test("root-only and empty repositories have no extra batches", () => {
   expect([...leafFolders(["a.js", "b.js"])]).toEqual([[".", ["a.js", "b.js"]]]);
   expect([...leafFolders([])]).toEqual([]);
+});
+
+test("progress mirrors the folder tree with boolean leaf values", () => {
+  const folders = leafFolders(["src/api/a.js", "src/ui/b.js", "scripts/run.js"]);
+  expect(progressTree(folders, new Set(["src/api"]))).toEqual({
+    src: { api: true, ui: false }, scripts: false,
+  });
+  expect(progressTree(leafFolders(["a.js"]), new Set())).toEqual({ ".": false });
+  expect(progressTree(new Map([["__proto__/constructor", []]]), new Set()))
+    .toEqual(JSON.parse('{"__proto__":{"constructor":false}}'));
+});
+
+for (const fail of [false, true]) {
+  test(`persists folder completion on ${fail ? "failure" : "success"}`, async () => {
+    const repository = await mkdtemp(join(directory, "progress-"));
+    execFileSync("git", ["init", "--quiet"], { cwd: repository });
+    for (const folder of ["src/api", "src/ui"]) {
+      await mkdir(join(repository, folder), { recursive: true });
+      await writeFile(join(repository, folder, "index.js"), "export {};\n");
+    }
+    await writeFile(join(repository, "cleanup.json"), '{"src":{"api":true,"ui":true}}');
+    const script = `
+      import { mock } from "bun:test";
+      import assert from "node:assert/strict";
+      import { readFileSync } from "node:fs";
+      let count = 0;
+      const progress = () => JSON.parse(readFileSync("cleanup.json", "utf8"));
+      mock.module("@opencode/client/service", () => ({ Service: {
+        ensure: async () => {
+          assert.deepEqual(progress(), { src: { api: false, ui: false } });
+          return { url: "mock" };
+        }, headers: () => ({}),
+      } }));
+      mock.module("@opencode/client", () => ({ OpenCode: { make: () => ({
+        session: {
+          create: async () => {
+            if (count === 1) assert.deepEqual(progress(), { src: { api: true, ui: false } });
+            return { id: String(++count) };
+          }, prompt: async () => {}, wait: async () => {},
+        },
+        message: { list: async ({ type }) => ({ data: type === "idle"
+          ? [{ outcome: ${fail} && count === 2 ? "failed" : "succeeded" }]
+          : [{ content: [] }] }) },
+      }) } }));
+      const { main } = await import(${JSON.stringify(new URL("./cleanup.mjs", import.meta.url).href)});
+      process.chdir(${JSON.stringify(repository)});
+      try { await main([]); } catch (error) { console.error(error.message); process.exitCode = 1; }
+    `;
+    const result = spawnSync(process.execPath, ["-e", script], { encoding: "utf8" });
+    expect(result.status).toBe(fail ? 1 : 0);
+    if (fail) expect(result.stderr).toContain("Cleanup failed for src/ui");
+    expect(JSON.parse(await readFile(join(repository, "cleanup.json"), "utf8")))
+      .toEqual({ src: { api: true, ui: !fail } });
+  });
+}
+
+test("empty runs write an empty tree without connecting to the server", async () => {
+  const repository = await mkdtemp(join(directory, "empty-"));
+  execFileSync("git", ["init", "--quiet"], { cwd: repository });
+  await writeFile(join(repository, "cleanup.json"), '{"old":true}');
+  const result = spawnSync(process.execPath, [bundle], { cwd: repository, encoding: "utf8" });
+  expect(result.status).toBe(0);
+  expect(JSON.parse(await readFile(join(repository, "cleanup.json"), "utf8"))).toEqual({});
 });
 
 test("bundle runs from stdin like curl piped to Bun", async () => {

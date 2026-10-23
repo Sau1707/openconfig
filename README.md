@@ -41,3 +41,8 @@ Runs one sequential session per deepest folder containing eligible text files.
 Ancestor folders and their direct files are not scheduled separately. Git-ignored
 files, dependencies, virtual environments, build output, caches, and lockfiles
 are skipped. Use `--list` to preview target folders without making changes.
+
+Each run creates `cleanup.json` with the target folder tree. Leaf values are
+`false` for pending/failed folders and `true` for successfully completed folders.
+Progress is saved after each folder and resets on the next run. `--list` does
+not create or update this file.
