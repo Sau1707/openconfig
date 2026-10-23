@@ -2433,6 +2433,22 @@ function progressTree(folders, completed) {
   }
   return tree;
 }
+function completedFolders(tree, prefix = "") {
+  if (!tree || typeof tree !== "object" || Array.isArray(tree)) {
+    throw new Error("Invalid cleanup.json: expected a folder tree with boolean leaf values.");
+  }
+  const completed = new Set;
+  for (const [name, value] of Object.entries(tree)) {
+    const folder = prefix ? `${prefix}/${name}` : name;
+    if (value === true)
+      completed.add(folder);
+    else if (value !== false) {
+      for (const child of completedFolders(value, folder))
+        completed.add(child);
+    }
+  }
+  return completed;
+}
 async function main(args = process.argv.slice(2)) {
   if (args.includes("--help")) {
     console.log(`Usage: cleanup [--list | --help]
@@ -2447,9 +2463,10 @@ environments, build output, caches, and lockfiles.
 Only deepest folders containing eligible text files are review targets.
 Files directly in ancestor folders are not scheduled for review.
 Writes cleanup.json with a folder tree: true = completed, false = pending/failed.
-Progress resets at the start of each run; --list does not write it.
+Resumes from cleanup.json, skipping folders marked true. Set a folder to false
+to review it again. --list does not write progress.
 
-  --list  List target folders without connecting or making changes`);
+  --list  List pending folders without connecting or making changes`);
     return;
   }
   if (args.some((arg) => arg !== "--list")) {
@@ -2477,13 +2494,21 @@ Progress resets at the start of each run; --list does not write it.
     }
   }
   const folders = leafFolders(eligible);
+  const progressPath = resolve("cleanup.json");
+  let completed = new Set;
+  try {
+    completed = completedFolders(JSON.parse(await readFile3(progressPath, "utf8")));
+  } catch (error) {
+    if (error.code !== "ENOENT") {
+      throw new Error(`Cannot load cleanup.json: ${error.message}`, { cause: error });
+    }
+  }
+  const pending = new Map([...folders].filter(([folder]) => !completed.has(folder)));
   if (args.includes("--list")) {
-    for (const folder of folders.keys())
+    for (const folder of pending.keys())
       console.log(folder);
     return;
   }
-  const completed = new Set;
-  const progressPath = resolve("cleanup.json");
   const saveProgress = async () => {
     const temporaryPath = `${progressPath}.${process.pid}.tmp`;
     await writeFile2(temporaryPath, JSON.stringify(progressTree(folders, completed), null, 2) + `
@@ -2491,14 +2516,14 @@ Progress resets at the start of each run; --list does not write it.
     await rename2(temporaryPath, progressPath);
   };
   await saveProgress();
-  if (!eligible.length)
+  if (!pending.size)
     return;
   const endpoint = await Service.ensure();
   const client = exports_client3.make({
     baseUrl: endpoint.url,
     headers: Service.headers(endpoint)
   });
-  for (const [folder, files] of folders) {
+  for (const [folder, files] of pending) {
     const currentFiles = [];
     for (const file of files) {
       try {
@@ -2583,6 +2608,7 @@ if (import.meta.main) {
   });
 }
 export {
+  completedFolders,
   leafFolders,
   main,
   progressTree

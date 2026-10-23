@@ -2,7 +2,7 @@ import { afterAll, beforeAll, expect, test } from "bun:test";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { leafFolders, progressTree } from "./cleanup.mjs";
+import { leafFolders, progressTree, completedFolders } from "./cleanup.mjs";
 
 let directory;
 let bundle;
@@ -99,15 +99,23 @@ test("progress mirrors the folder tree with boolean leaf values", () => {
     .toEqual(JSON.parse('{"__proto__":{"constructor":false}}'));
 });
 
+test("reads only true leaves as completed and rejects invalid progress", () => {
+  expect([...completedFolders({ src: { api: true, ui: false }, ".": true })])
+    .toEqual(["src/api", "."]);
+  for (const value of [null, [], true, { src: "true" }, { src: 1 }]) {
+    expect(() => completedFolders(value)).toThrow("Invalid cleanup.json");
+  }
+});
+
 for (const fail of [false, true]) {
   test(`persists folder completion on ${fail ? "failure" : "success"}`, async () => {
     const repository = await mkdtemp(join(directory, "progress-"));
     execFileSync("git", ["init", "--quiet"], { cwd: repository });
-    for (const folder of ["src/api", "src/ui"]) {
+    for (const folder of ["src/api", "src/ui", "src/new"]) {
       await mkdir(join(repository, folder), { recursive: true });
       await writeFile(join(repository, folder, "index.js"), "export {};\n");
     }
-    await writeFile(join(repository, "cleanup.json"), '{"src":{"api":true,"ui":true}}');
+    await writeFile(join(repository, "cleanup.json"), '{"src":{"api":true,"new":false}}');
     const script = `
       import { mock } from "bun:test";
       import assert from "node:assert/strict";
@@ -116,14 +124,15 @@ for (const fail of [false, true]) {
       const progress = () => JSON.parse(readFileSync("cleanup.json", "utf8"));
       mock.module("@opencode/client/service", () => ({ Service: {
         ensure: async () => {
-          assert.deepEqual(progress(), { src: { api: false, ui: false } });
+          assert.deepEqual(progress(), { src: { api: true, new: false, ui: false } });
           return { url: "mock" };
         }, headers: () => ({}),
       } }));
       mock.module("@opencode/client", () => ({ OpenCode: { make: () => ({
         session: {
-          create: async () => {
-            if (count === 1) assert.deepEqual(progress(), { src: { api: true, ui: false } });
+          create: async ({ title }) => {
+            assert.equal(title, count === 0 ? "Cleanup: src/new" : "Cleanup: src/ui");
+            if (count === 1) assert.deepEqual(progress(), { src: { api: true, new: true, ui: false } });
             return { id: String(++count) };
           }, prompt: async () => {}, wait: async () => {},
         },
@@ -133,13 +142,13 @@ for (const fail of [false, true]) {
       }) } }));
       const { main } = await import(${JSON.stringify(new URL("./cleanup.mjs", import.meta.url).href)});
       process.chdir(${JSON.stringify(repository)});
-      try { await main([]); } catch (error) { console.error(error.message); process.exitCode = 1; }
+      try { await main([]); assert.equal(count, 2); } catch (error) { console.error(error.message); process.exitCode = 1; }
     `;
     const result = spawnSync(process.execPath, ["-e", script], { encoding: "utf8" });
     expect(result.status).toBe(fail ? 1 : 0);
     if (fail) expect(result.stderr).toContain("Cleanup failed for src/ui");
     expect(JSON.parse(await readFile(join(repository, "cleanup.json"), "utf8")))
-      .toEqual({ src: { api: true, ui: !fail } });
+      .toEqual({ src: { api: true, new: true, ui: !fail } });
   });
 }
 
@@ -150,6 +159,35 @@ test("empty runs write an empty tree without connecting to the server", async ()
   const result = spawnSync(process.execPath, [bundle], { cwd: repository, encoding: "utf8" });
   expect(result.status).toBe(0);
   expect(JSON.parse(await readFile(join(repository, "cleanup.json"), "utf8"))).toEqual({});
+});
+
+test("completed runs and previews do not connect to the server", async () => {
+  const repository = await mkdtemp(join(directory, "completed-"));
+  execFileSync("git", ["init", "--quiet"], { cwd: repository });
+  await writeFile(join(repository, "index.js"), "export {};\n");
+  const path = join(repository, "cleanup.json");
+  const saved = '{".": true}\n';
+  await writeFile(path, saved);
+  const preview = spawnSync(process.execPath, [bundle, "--list"], { cwd: repository, encoding: "utf8" });
+  expect(preview.status).toBe(0);
+  expect(preview.stdout).toBe("");
+  expect(await readFile(path, "utf8")).toBe(saved);
+  const run = spawnSync(process.execPath, [bundle], { cwd: repository, encoding: "utf8" });
+  expect(run.status).toBe(0);
+  expect(JSON.parse(await readFile(path, "utf8"))).toEqual({ ".": true });
+});
+
+test("invalid progress is not overwritten", async () => {
+  const repository = await mkdtemp(join(directory, "invalid-"));
+  execFileSync("git", ["init", "--quiet"], { cwd: repository });
+  const path = join(repository, "cleanup.json");
+  for (const saved of ['{"unfinished":', '{"src":"true"}']) {
+    await writeFile(path, saved);
+    const run = spawnSync(process.execPath, [bundle], { cwd: repository, encoding: "utf8" });
+    expect(run.status).toBe(1);
+    expect(run.stderr).toContain("Cannot load cleanup.json");
+    expect(await readFile(path, "utf8")).toBe(saved);
+  }
 });
 
 test("bundle runs from stdin like curl piped to Bun", async () => {
