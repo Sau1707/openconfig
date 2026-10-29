@@ -4,6 +4,11 @@
   "model": "openai/gpt-6.1-sol",
   "small_model": "openai/gpt-6-luna",
   "plugins": ["opencode-gpt-live"],
+  "experimental": {
+    "image_generate": {
+      "model": "openai/gpt-image-2"
+    }
+  },
   "providers": {
     "openai": {
       "models": {
