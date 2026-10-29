@@ -1,12 +1,4 @@
 {
   "name": "openconfig",
-  "private": true,
-  "scripts": {
-    "cleanup": "bun scripts/cleanup.mjs",
-    "build": "bun build scripts/cleanup.mjs --target=bun --outfile=dist/cleanup.mjs",
-    "test": "bun test"
-  },
-  "dependencies": {
-    "@opencode/client": "^2.1.2"
-  }
+  "private": true
 }
