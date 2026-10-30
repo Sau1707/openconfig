@@ -7,7 +7,7 @@ Local Linux voice dictation for the OpenCode terminal UI. No desktop or browser 
 - OpenCode V2 with the TUI plugin API (`@opencode/plugin` 2.2.1).
 - Bun 1.4.3 or newer on `PATH`.
 - Ubuntu/Debian Linux, x64 or arm64, with a working PipeWire microphone.
-- `pw-record` (Ubuntu package `pipewire-bin`) and `unzip`.
+- `pw-record` (Ubuntu package `pipewire-bin`), `wpctl` (`wireplumber`), and `unzip`.
 
 The first recording downloads the Whistle model (~17 MB) and compatible native engine from pinned Hugging Face revisions. The model's SHA-256 is verified. Assets are cached under `${XDG_CACHE_HOME:-~/.cache}/opencode-dicated`. After setup, transcription runs locally without uploading audio. Audio stays in memory and is limited to 30 seconds. The native engine must be compatible with the system's libc and CPU.
 
@@ -40,7 +40,9 @@ Optional configuration:
 
 Focus the prompt and click **Record**, press **Ctrl+Alt+D**, or invoke `/dictate`. Click **Stop recording** or use the shortcut again to transcribe. Recording also stops after 30 seconds. **Cancel** or `/dictate-cancel` discards the recording or pending transcript.
 
-The transcript is pasted into the original prompt only if it still has focus. Otherwise, return to that prompt and click **Insert transcript** or use the shortcut. Existing prompt text is preserved. Nothing is automatically submitted, and the clipboard is not used. Recording does not mute system audio; headphones are recommended.
+The transcript is pasted into the original prompt only if it still has focus. Otherwise, return to that prompt and click **Insert transcript** or use the shortcut. Existing prompt text is preserved. Nothing is automatically submitted, and the clipboard is not used.
+
+The default system audio output is muted while recording; the microphone stays active. Its previous mute state is restored when recording stops, is cancelled, or fails, before transcription starts. Volume levels are unchanged. If muting fails, recording does not start. Force-killing the helper can prevent restoration.
 
 ## Development
 

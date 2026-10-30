@@ -36,13 +36,12 @@ export default Plugin.define({
     function cancel() {
       generation++
       const child = process
-      process = undefined
       setStatus("idle")
       setTranscript("")
       if (!child) return
       child.stdin.write("cancel\n")
       child.kill("SIGTERM")
-      const timer = setTimeout(() => child.kill("SIGKILL"), 1500)
+      const timer = setTimeout(() => child.kill("SIGKILL"), 6000)
       timer.unref()
       child.once("close", () => clearTimeout(timer))
     }
@@ -53,7 +52,7 @@ export default Plugin.define({
         setStatus("transcribing")
         return
       }
-      if (status() !== "idle") return
+      if (status() !== "idle" || process) return
       if (transcript()) return insert()
       editor = ctx.renderer.currentFocusedEditor
       if (!editor) return toast("Focus the prompt before starting dictation.")
@@ -104,8 +103,8 @@ export default Plugin.define({
       })
       child.once("close", () => {
         lines.close()
+        if (process === child) process = undefined
         if (!active()) return
-        process = undefined
         setStatus("idle")
         if (!completed) toast(stderr.trim() || "Dictation helper exited unexpectedly.", "error")
       })

@@ -7,6 +7,7 @@ import { homedir } from "node:os"
 import { join } from "node:path"
 import { createInterface } from "node:readline"
 import { decodePCM, type Message } from "./session.ts"
+import { muteOutput } from "./audio.ts"
 
 const engineRevision = "93e88ede867e4311c39151285e74df513e4b835b"
 const modelRevision = "ca5287601bef25af26dcf2e1b2bdc0843a7c19e5"
@@ -43,7 +44,7 @@ async function download(url: string, destination: string, hash?: string) {
 async function loadEngine() {
   if (process.platform !== "linux" || !["x64", "arm64"].includes(process.arch))
     throw new Error("Dictation currently supports Linux x64 and arm64 only")
-  for (const command of ["pw-record", "unzip"])
+  for (const command of ["pw-record", "unzip", "wpctl"])
     if (!Bun.which(command)) throw new Error(`Missing ${command}; see the plugin README`)
   const directory = join(
     process.env.XDG_CACHE_HOME ?? join(homedir(), ".cache"),
@@ -157,7 +158,14 @@ try {
   const engine = await loadEngine()
   controller.signal.throwIfAborted()
   try {
-    const audio = await record()
+    const restoreOutput = await muteOutput()
+    let audio: Float32Array
+    try {
+      controller.signal.throwIfAborted()
+      audio = await record()
+    } finally {
+      await restoreOutput()
+    }
     if (!audio.length) throw new Error("No microphone audio captured")
     send({ type: "transcribing" })
     const output = Buffer.alloc(262144)
