@@ -23,8 +23,6 @@ jobs:
       run:
         working-directory: repository
         shell: bash
-    env:
-      CLEANUP_REPORT: ${{ runner.temp }}/cleanup-report.md
     steps:
       - name: Check out the default branch
         uses: actions/checkout@v4
@@ -33,9 +31,11 @@ jobs:
           path: repository
           persist-credentials: false
 
-      - name: Record the base commit
+      - name: Initialize cleanup
         id: base
-        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "CLEANUP_REPORT=$RUNNER_TEMP/cleanup-report.md" >> "$GITHUB_ENV"
 
       - name: Check for an existing cleanup PR
         id: pending
