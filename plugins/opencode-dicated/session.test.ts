@@ -1,6 +1,9 @@
 import { describe, expect, test } from "bun:test"
 import { decodePCM, parseMessage } from "./session.ts"
 import { fileURLToPath } from "node:url"
+import { mkdtemp, rm, writeFile } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
 
 describe("helper messages", () => {
   test("accepts recording states and transcript text", () => {
@@ -45,4 +48,47 @@ test("helper reports missing dependencies without recording or downloading asset
   expect(stderr).toBe("")
   expect(parseMessage(stdout.trim())).toMatchObject({ type: "error" })
   expect(stdout).not.toContain('"type":"recording"')
+})
+
+test("SIGTERM cancels asset loading without a cancel command", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "dictation-cancel-"))
+  try {
+    for (const command of ["pw-record", "unzip", "wpctl"])
+      await writeFile(join(directory, command), "#!/bin/sh\nexit 1\n", { mode: 0o755 })
+    const preload = join(directory, "preload.js")
+    await writeFile(preload, `
+      globalThis.fetch = (_url, { signal }) => new Promise((_resolve, reject) => {
+        signal.addEventListener("abort", () => reject(signal.reason), { once: true })
+        process.stderr.write("downloading\\n")
+      })
+    `)
+    const child = Bun.spawn([
+      process.execPath, "--preload", preload, fileURLToPath(new URL("./helper.ts", import.meta.url)),
+    ], {
+      env: { ...process.env, PATH: directory, XDG_CACHE_HOME: directory },
+      stdin: "pipe", stdout: "pipe", stderr: "pipe",
+      signal: AbortSignal.timeout(3000),
+    })
+    try {
+      const reader = child.stderr.getReader()
+      const ready = await reader.read()
+      expect(new TextDecoder().decode(ready.value)).toBe("downloading\n")
+      child.kill("SIGTERM")
+      const [stdout, stderr, code] = await Promise.all([
+        new Response(child.stdout).text(), reader.read(), child.exited,
+      ])
+      reader.releaseLock()
+      expect(code).toBe(0)
+      expect(stdout).toBe("")
+      expect(stderr.done).toBe(true)
+    } finally {
+      child.stdin.end()
+      if (child.exitCode === null) {
+        child.kill("SIGKILL")
+        await child.exited
+      }
+    }
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
 })

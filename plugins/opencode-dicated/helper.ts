@@ -1,13 +1,14 @@
 import { dlopen, ptr } from "bun:ffi"
 // Adapted from Uncode (Apache-2.0); changed for a cancellable TUI helper.
-import { createHash, randomUUID } from "node:crypto"
+import { createHash } from "node:crypto"
 import { spawn } from "node:child_process"
-import { mkdir, readFile, rename, rm } from "node:fs/promises"
+import { mkdir, readFile } from "node:fs/promises"
 import { homedir } from "node:os"
 import { join } from "node:path"
 import { createInterface } from "node:readline"
 import { decodePCM, type Message } from "./session.ts"
 import { muteOutput } from "./audio.ts"
+import { writeAtomic } from "./atomic.ts"
 
 const engineRevision = "93e88ede867e4311c39151285e74df513e4b835b"
 const modelRevision = "ca5287601bef25af26dcf2e1b2bdc0843a7c19e5"
@@ -32,13 +33,7 @@ async function download(url: string, destination: string, hash?: string) {
   if (!bytes.length) throw new Error("Downloaded asset is empty")
   if (hash && createHash("sha256").update(bytes).digest("hex") !== hash)
     throw new Error("Whistle model checksum mismatch")
-  const temporary = `${destination}.${randomUUID()}.partial`
-  try {
-    await Bun.write(temporary, bytes)
-    await rename(temporary, destination)
-  } finally {
-    await rm(temporary, { force: true })
-  }
+  await writeAtomic(destination, bytes)
 }
 
 async function loadEngine() {
@@ -76,13 +71,7 @@ async function loadEngine() {
       child.exited,
     ])
     if (code !== 0 || !bytes.byteLength) throw new Error(`Engine extraction failed: ${stderr}`)
-    const temporary = `${libraryPath}.${randomUUID()}.partial`
-    try {
-      await Bun.write(temporary, bytes)
-      await rename(temporary, libraryPath)
-    } finally {
-      await rm(temporary, { force: true })
-    }
+    await writeAtomic(libraryPath, bytes)
   }
   const library = dlopen(libraryPath, {
     needle_load: { args: ["ptr", "u64"], returns: "i32" },
@@ -98,11 +87,13 @@ async function loadEngine() {
 }
 
 function record() {
-  const child = spawn("pw-record", ["--raw", "--format", "s16", "--rate", "16000", "--channels", "1", "-"], {
+  const sampleRate = 16000
+  const durationSeconds = 30
+  const child = spawn("pw-record", ["--raw", "--format", "s16", "--rate", String(sampleRate), "--channels", "1", "-"], {
     stdio: ["ignore", "pipe", "pipe"],
   })
   const chunks: Buffer[] = []
-  const maxBytes = 16000 * 30 * 2
+  const maxBytes = sampleRate * durationSeconds * 2
   let length = 0
   let stopped = false
   let stderr = ""
@@ -114,7 +105,7 @@ function record() {
     killTimer = setTimeout(() => child.kill("SIGKILL"), 1000)
   }
   stopRecording = stop
-  const timer = setTimeout(stop, 30000)
+  const timer = setTimeout(stop, durationSeconds * 1000)
   return new Promise<Float32Array>((resolve, reject) => {
     const cleanup = () => {
       clearTimeout(timer)
@@ -148,7 +139,6 @@ function cancel() {
 const input = createInterface({ input: process.stdin })
 input.on("line", (line) => {
   if (line === "stop") stopRecording?.()
-  if (line === "cancel") cancel()
 })
 input.on("close", cancel)
 process.on("SIGTERM", cancel)

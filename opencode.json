@@ -31,9 +31,7 @@
     { "action": "read", "resource": "*.env", "effect": "allow" },
     { "action": "read", "resource": "*.env.*", "effect": "allow" },
     { "action": "read", "resource": ".env*", "effect": "allow" },
-    { "action": "read", "resource": "**/.env*", "effect": "allow" },
-    { "action": "read", "resource": ".env.sample", "effect": "allow" },
-    { "action": "read", "resource": "**/.env.sample", "effect": "allow" }
+    { "action": "read", "resource": "**/.env*", "effect": "allow" }
   ],
   "lsp": true
 }

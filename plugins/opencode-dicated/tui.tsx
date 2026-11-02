@@ -39,7 +39,6 @@ export default Plugin.define({
       setStatus("idle")
       setTranscript("")
       if (!child) return
-      child.stdin.write("cancel\n")
       child.kill("SIGTERM")
       const timer = setTimeout(() => child.kill("SIGKILL"), 6000)
       timer.unref()
