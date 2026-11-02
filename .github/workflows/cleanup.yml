@@ -67,6 +67,7 @@ jobs:
           test -n "$OPENAI_API_KEY" || { echo 'Missing OPENAI_API_KEY secret.'; exit 1; }
           opencode run --standalone --auto --agent loop "@cleanup Find simplification opportunities"
           opencode run --standalone --auto --continue --agent build "Implement everything High or Medium"
+          opencode run --standalone --auto --continue --agent build "Generate a Markdown pull request description based on the final diff and actual verification results from this session. Write the description to the absolute path in CLEANUP_REPORT. Include a summary of the implemented changes, checks that passed or failed, and any remaining limitations. If nothing changed, state that explicitly. Do not include secrets or raw environment output. Do not modify repository files, commit, push, or create a pull request."
 
       - name: Validate the resulting changes
         if: steps.pending.outputs.skip != 'true'
@@ -96,5 +97,5 @@ jobs:
           base: ${{ github.event.repository.default_branch }}
           branch: automation/opencode-cleanup
           commit-message: 'refactor: scoped OpenCode cleanup'
-          title: 'refactor: scoped OpenCode cleanup'
+          title: cleanup
           body-path: ${{ env.CLEANUP_REPORT }}
