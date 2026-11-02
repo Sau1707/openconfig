@@ -1,6 +1,7 @@
 name: Scoped OpenCode cleanup
 
 on:
+  workflow_dispatch:
   workflow_call:
     secrets:
       OPENAI_API_KEY:
@@ -57,49 +58,15 @@ jobs:
           git clone --branch main https://github.com/Sau1707/openconfig.git "$HOME/.config/opencode"
           opencode --version
 
-      - name: Implement scoped cleanup
+      - name: Implement cleanup findings
         if: steps.pending.outputs.skip != 'true'
         timeout-minutes: 35
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           test -n "$OPENAI_API_KEY" || { echo 'Missing OPENAI_API_KEY secret.'; exit 1; }
-          opencode run --standalone --auto --agent loop "$(cat <<'PROMPT'
-          Perform one unattended cleanup iteration using the cleanup skill.
-          Follow the repository's AGENTS.md instructions. Inspect the directory
-          structure and randomly choose one bounded feature, source folder, or
-          subfolder to review. Do not use recent commits to select it. Exclude
-          dependencies, generated files, assets, and configuration directories.
-          Commit to that scope before searching for cleanup opportunities; do not
-          perform a broad whole-repository review.
-
-          First map this feature's entry points, workflow, state ownership,
-          dependencies, callers, contracts, and tests. Follow references outside
-          the folder to establish safety, but do not scan unrelated features.
-          Investigate meaningful conceptual simplifications, not syntax churn.
-
-          Identify up to five candidates and assess each one's confidence.
-          For this unattended run, the user authorizes implementation of only
-          high-confidence, behavior-preserving candidates. Do not wait for item
-          selection, ask questions, or repeat the loop. Fewer than five or no
-          findings is fine. Skip anything with unresolved compatibility concerns.
-          Keep changes centered on this feature; update directly affected callers
-          and tests when necessary. Do not upgrade dependencies, change schemas,
-          alter public behavior, edit .github, commit, push, or create a PR.
-
-          Implement the smallest complete changes. Run the relevant checks and
-          inspect the final diff. If a candidate cannot be safely completed and
-          verified, remove only your own changes for that candidate.
-
-          Write a Markdown PR report to the absolute path in CLEANUP_REPORT,
-          outside the repository. Include the selected scope, exploration summary,
-          each implemented finding's exact paths/lines, evidence of redundancy,
-          smallest complete change, benefit, preserved invariants, confidence,
-          and actual verification results. Note skipped candidates and uncertainty.
-          If nothing qualifies, report that explicitly and leave no source changes.
-          Do not include secrets or raw environment output in the report.
-          PROMPT
-          )"
+          opencode run --standalone --auto --agent loop "@cleanup Find simplification opportunities"
+          opencode run --standalone --auto --continue --agent build "Implement everything High or Medium"
 
       - name: Validate the resulting changes
         if: steps.pending.outputs.skip != 'true'
