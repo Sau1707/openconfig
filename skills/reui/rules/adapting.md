@@ -4,16 +4,16 @@ ReUI items ship production-quality. Your job is to **adapt by reuse** - wire rea
 
 ## Preserve the design - don't over-customize
 
-The design IS the product. A ReUI block/component encodes senior-designer decisions: spacing, hierarchy, density, color treatment, and component choices. The fastest way to turn a premium block back into generic AI slop is to "improve" its look - so don't.
+ReUI components and examples encode spacing, hierarchy, density, color treatment and component choices. Preserve those defaults while wiring the app's data and behavior.
 
 - Change **data, copy, and props**; keep the **structure and styling** it ships with. Make the **smallest** change that wires the real data. If your diff touches `className` / JSX structure more than data / props, you are over-customizing - stop and reuse.
 - Don't swap ReUI components for hand-rolled ones, restructure the layout, re-skin spacing / radius / colors, or add decorative chrome. Let the installed components carry the default spacing, radius, sizing, icon rhythm, density, and state styling; add custom Tailwind only when a component genuinely lacks a contract you need.
-- Want a different look? Use CLI search or official docs to find a block whose design already fits - don't restyle this one into a new design.
+- Want a different look? Use CLI search or official docs to find a free example whose design already fits - don't restyle this one into a new design.
 
-## Reuse the parts: examples and the block's own elements
+## Reuse the parts: examples and their elements
 
 - **Examples are building parts.** A free `c-*` example is a correct, single-pattern composition you can reuse. Before composing from scratch, find the closest example through CLI search or docs, install it, and reuse its wiring.
-- **Reuse a block's own elements.** Need more rows, cards, items, or sections than ship by default? Repeat the block's **existing** element by mapping real data through the same markup - never invent parallel markup that drifts from its design. Need a variant (empty / loading / expanded)? Derive it from an element the block already has.
+- **Reuse an example's own elements.** Need more rows, cards, items, or sections than ship by default? Repeat the example's **existing** element by mapping real data through the same markup - never invent parallel markup that drifts from its design. Need a variant (empty / loading / expanded)? Derive it from an element the example already has.
 
 ## Don't invent (read, don't guess)
 
@@ -24,11 +24,10 @@ The design IS the product. A ReUI block/component encodes senior-designer decisi
 
 - **Change:** the item's own data, copy, props, and layout to fit the app.
 - **Leave alone:** installed component files, hooks, and the shared theme - do not edit vendored ReUI internals; change behavior through props and the documented API.
-- Blocks are **portable React** - no `next/link`, `next/image`, or other framework-runtime imports inside them. Keep them portable.
 
 ## Demo data -> real data
 
-- Replace every placeholder with the user's real data. Model it as **typed data structures** and **map over arrays** - never duplicate JSX per row/card. Keep small block-specific formatters next to the data.
+- Replace every placeholder with the user's real data. Model it as **typed data structures** and **map over arrays** - never duplicate JSX per row/card. Keep small example-specific formatters next to the data.
 - Wire the real source (columns, fields, fetch). For `data-grid`, implement the server fetch contract if the user needs server-side data.
 - Never read `window`, `localStorage`, `location`, `Date.now()` or `Math.random()` in render or in a `useState` initializer; read them in an effect.
 - **Type from the component API, derive during render.** Type domain state through the component's own types - e.g. map status to `BadgeProps["variant"]` via a typed `Record<Status, …>` - instead of stringly-typed values. Compute view state during render; don't mirror derived data into `useState`/`useEffect`.

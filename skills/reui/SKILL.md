@@ -1,6 +1,6 @@
 ---
 name: reui
-description: "ReUI design and component rules for React apps on shadcn/ui and Tailwind. Use for any UI work in a project with @reui in components.json or a components/reui folder, and in any shadcn project that asks for data grids, kanban boards, dashboards or full pages: building or restyling pages, forms and tables; colors, theme tokens and dark mode; spacing, typography and layout; animation and hover motion; installing ReUI components, examples or Pro blocks."
+description: "ReUI design and component rules for React apps on shadcn/ui and Tailwind. Use for any UI work in a project with @reui in components.json or a components/reui folder, and in any shadcn project that asks for data grids, kanban boards, dashboards or full pages: building or restyling pages, forms and tables; colors, theme tokens and dark mode; spacing, typography and layout; animation and hover motion; installing free ReUI components and examples."
 allowed-tools: Bash(npx shadcn@latest *), Bash(pnpm dlx shadcn@latest *), Bash(bunx --bun shadcn@latest *)
 metadata:
   user-invocable: "false"
@@ -9,7 +9,7 @@ metadata:
 # ReUI
 
 ReUI is an existing design system on shadcn/ui. Keep its look. Generic frontend advice (vary fonts or themes, gradients, page-load or staggered reveals, "2-3 intentional motions", Framer Motion) does not apply here.
-It ships free components, free `c-*` examples and Pro blocks through the shadcn CLI. Find items through CLI search and read their APIs in the ReUI docs or installed files. Use `lucide-react` for all icons.
+Use only free ReUI components and `c-*` examples through the shadcn CLI. Do not install paid blocks, templates or ReUI icons. Compose full pages from free components and examples, and use `lucide-react` for all icons. Find items through CLI search and read their APIs in the ReUI docs or installed files.
 
 ## Order of authority
 
@@ -63,7 +63,7 @@ Open the local topic files below.
 | --------------- | ------------------------------------------------ | -------------------------------------------- |
 | `compose`       | [rules/compose.md](./rules/compose.md)             | before building any screen or section        |
 | `workflow`      | [rules/workflow.md](./rules/workflow.md)           | discovery, API docs, installing              |
-| `adapting`      | [rules/adapting.md](./rules/adapting.md)           | changing an installed block or example       |
+| `adapting`      | [rules/adapting.md](./rules/adapting.md)           | changing an installed example                |
 | `components`    | [rules/components.md](./rules/components.md)       | `data-grid`, `filters`, `kanban` and the rest |
 | `color`         | [rules/color.md](./rules/color.md)                 | any color, status, chart or dark mode choice |
 | `theming`       | [rules/theming.md](./rules/theming.md)             | the styles, radius, density and sizes        |
@@ -72,9 +72,5 @@ Open the local topic files below.
 | `icons`         | [rules/icons.md](./rules/icons.md)                 | Lucide imports and icon placement            |
 | `quality`       | [rules/quality.md](./rules/quality.md)             | the done gate: self-checks, a11y, hand-back   |
 | `anti-patterns` | [rules/anti-patterns.md](./rules/anti-patterns.md) | the Check step: drift pairs, stale habits    |
-| `registry`      | [rules/registry.md](./rules/registry.md)           | free vs premium, base vs radix               |
-| `cli`           | [rules/cli.md](./rules/cli.md)                     | `components.json`, license key, install flags |
-
-## Plans
-
-Free covers components, `c-*` examples and this skill. Pro adds blocks. If the user's license does not cover a block, keep building with free components and examples.
+| `registry`      | [rules/registry.md](./rules/registry.md)           | registry names, base vs radix                |
+| `cli`           | [rules/cli.md](./rules/cli.md)                     | `components.json`, install flags              |

@@ -65,7 +65,7 @@ Info text in dark mode is under 4.5:1: where it must be read, write the words in
 
 ## Charts
 
-Check your theme's `--chart-1` to `--chart-5` in both modes. The current shadcn themes keep the same chart colors in light and dark; some themes (reui.io's own among them) change hue. For a series whose identity must hold in both modes, use a palette var such as `var(--color-violet-500)`, as ReUI blocks do.
+Check your theme's `--chart-1` to `--chart-5` in both modes. The current shadcn themes keep the same chart colors in light and dark; some themes (reui.io's own among them) change hue. For a series whose identity must hold in both modes, use a palette var such as `var(--color-violet-500)`.
 
 <!-- gen:charts:start -->
 
