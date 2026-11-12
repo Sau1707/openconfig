@@ -1,6 +1,6 @@
 ---
 name: reui
-description: "ReUI design and component rules for React apps on shadcn/ui and Tailwind. Use for any UI work in a project with @reui in components.json or a components/reui folder, and in any shadcn project that asks for data grids, kanban boards, dashboards or full pages: building or restyling pages, forms and tables; colors, theme tokens and dark mode; spacing, typography and layout; animation and hover motion; installing ReUI components, examples, Pro blocks or Motion Icons."
+description: "ReUI design and component rules for React apps on shadcn/ui and Tailwind. Use for any UI work in a project with @reui in components.json or a components/reui folder, and in any shadcn project that asks for data grids, kanban boards, dashboards or full pages: building or restyling pages, forms and tables; colors, theme tokens and dark mode; spacing, typography and layout; animation and hover motion; installing ReUI components, examples or Pro blocks."
 allowed-tools: Bash(npx shadcn@latest *), Bash(pnpm dlx shadcn@latest *), Bash(bunx --bun shadcn@latest *)
 metadata:
   user-invocable: "false"
@@ -9,7 +9,7 @@ metadata:
 # ReUI
 
 ReUI is an existing design system on shadcn/ui. Keep its look. Generic frontend advice (vary fonts or themes, gradients, page-load or staggered reveals, "2-3 intentional motions", Framer Motion) does not apply here.
-It ships free components, free `c-*` examples, Pro blocks and Ultimate Motion Icons through the shadcn CLI. Find items through CLI search and read their APIs in the ReUI docs or installed files.
+It ships free components, free `c-*` examples and Pro blocks through the shadcn CLI. Find items through CLI search and read their APIs in the ReUI docs or installed files. Use `lucide-react` for all icons.
 
 ## Order of authority
 
@@ -49,7 +49,7 @@ Share an item's official preview link when available; don't invent URLs.
 - **Spacing**: `gap-*` on the parent, not `space-y-*`; `gap-1` to `gap-2` in a row, `gap-3` to `gap-4` between groups, `gap-6` to `gap-8` between sections; title to description `gap-0.5`.
 - **Type**: `text-sm` body, `text-xs` meta (controls keep their style's size), `font-medium` or `font-semibold`, headings `tracking-tight`, numbers `tabular-nums`; nothing below `text-xs` except illustrative mini-UI.
 - **Motion**: installed components own their motion. Your own code uses `transition-colors` for hover and press, `duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]` to reveal, `duration-300` with the same curve at most (media hover zoom: 500), and `SPRING` (`{ type: "spring", visualDuration: 0.25, bounce: 0 }`) for drag and reorder. At most 1 entrance animation per view (a stagger counts as 1). Animate only `transform` and `opacity`, CSS before motion/react, never set state per frame; `<MotionConfig reducedMotion="user">` once at the root plus `motion-reduce:` on CSS, where reduced motion means a calm fade, not nothing.
-- **Surfaces**: prefer 1 container family per screen. With a KPI row and a table, use FramePanels for both, or Cards for the KPIs and a Frame for the table; never a Card inside a Frame or a Frame inside a Card. Icons come from 1 library, the `iconLibrary` in `components.json` (on Ultimate, 1 Motion Icon on the primary action is the exception).
+- **Surfaces**: prefer 1 container family per screen. With a KPI row and a table, use FramePanels for both, or Cards for the KPIs and a Frame for the table; never a Card inside a Frame or a Frame inside a Card. Icons come from `lucide-react` only; set `iconLibrary` to `lucide` in `components.json`.
 - **States**: each data region has empty (1 action), loading (a `Skeleton` in the real layout) and error (Retry) states; light and dark work.
 - **Never invent**: never write a prop, variant or `@reui/` name you did not read in official docs, an installed file or CLI output.
 
@@ -69,12 +69,12 @@ Open the local topic files below.
 | `theming`       | [rules/theming.md](./rules/theming.md)             | the styles, radius, density and sizes        |
 | `motion`        | [rules/motion.md](./rules/motion.md)               | any transition, animation or motion/react    |
 | `layout`        | [rules/layout.md](./rules/layout.md)               | house defaults, hierarchy, surfaces, states  |
-| `icons`         | [rules/icons.md](./rules/icons.md)                 | icon imports, Motion Icons                   |
+| `icons`         | [rules/icons.md](./rules/icons.md)                 | Lucide imports and icon placement            |
 | `quality`       | [rules/quality.md](./rules/quality.md)             | the done gate: self-checks, a11y, hand-back   |
 | `anti-patterns` | [rules/anti-patterns.md](./rules/anti-patterns.md) | the Check step: drift pairs, stale habits    |
-| `registry`      | [rules/registry.md](./rules/registry.md)           | free vs Pro vs Ultimate, base vs radix       |
+| `registry`      | [rules/registry.md](./rules/registry.md)           | free vs premium, base vs radix               |
 | `cli`           | [rules/cli.md](./rules/cli.md)                     | `components.json`, license key, install flags |
 
 ## Plans
 
-Free covers components, `c-*` examples and this skill. Pro adds blocks. Ultimate adds Motion Icons. If the user's license does not cover an item, keep building with free components and examples.
+Free covers components, `c-*` examples and this skill. Pro adds blocks. If the user's license does not cover a block, keep building with free components and examples.

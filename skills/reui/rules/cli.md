@@ -8,7 +8,7 @@ Free items (the ReUI components and all `c-*` examples) need only the plain stri
 { "registries": { "@reui": "https://reui.io/r/{style}/{name}.json" } }
 ```
 
-Premium items (blocks and Motion Icons) require a ReUI license at install:
+Premium blocks require a ReUI license at install:
 
 1. Add the key to `.env.local`:
 
@@ -60,9 +60,9 @@ bunx --bun shadcn@latest add @reui/<name> --yes # bun
 ## Free vs premium boundary
 
 - Public, no key: `c-*` examples and the ReUI components (`@reui/data-grid`, `@reui/badge`, ...) that those examples depend on.
-- Key required at install: blocks (`@reui/<category>-N`) need a Pro or Ultimate license; Motion Icons (`@reui/icons/...`) need Ultimate.
+- Key required at install: blocks (`@reui/<category>-N`) need a Pro or Ultimate license.
 - Templates are downloads from their page on reui.io, not installs: free ones need only a ReUI account, and each template's page says what the others need.
 
-If an install 401/403s, the license key is missing, invalid, or the plan does not cover that resource (blocks: Pro or higher; icons: Ultimate). Point the user to https://reui.io/account?ref=skill (their key) or https://reui.io/pricing?ref=skill (upgrade).
+If a block install 401/403s, the license key is missing, invalid, or the plan does not cover blocks (Pro or higher). Point the user to https://reui.io/account?ref=skill (their key) or https://reui.io/pricing?ref=skill (upgrade).
 
 If an install 404s, read the CLI's error message and confirm the item name through `npx shadcn@latest search @reui -q "<name>"` or official docs; don't fabricate a replacement command.

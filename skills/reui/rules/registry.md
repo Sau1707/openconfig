@@ -1,11 +1,10 @@
 # ReUI registry structure
 
-ReUI is a shadcn-compatible registry with four entity types. **Examples and blocks are built FROM components** - reuse them, don't rebuild.
+Use ReUI's shadcn-compatible registry for components, examples and blocks. **Examples and blocks are built FROM components** - reuse them, don't rebuild. Icons come from `lucide-react`, not the registry.
 
 - **component** - one of the ReUI components with a real API (`data-grid`, `kanban`, `filters`, `date-selector`, `tree`, ...). Install directly (`@reui/data-grid`) or let it come in as a dependency of an example/block. Free. Read its official API docs and installed types.
 - **example** - a free `c-*` single-pattern use-case of a component (`c-kanban-1`, `c-data-grid-3`). Install one and read it to copy real composition. Find examples through CLI search or official docs.
 - **block** - a premium, full-page section that composes several components (a full dashboard or settings page). Pro or Ultimate license at install. Its surfaces, text and borders use your theme tokens; its category accents (chart series, tags, avatars) are fixed palette colors paired for light and dark.
-- **icon** - Motion Icons in 4 styles (outline, solid, duotone, filled), static (`@reui/icons/default/<style>/<name>`), plus a hover-animated variant (`@reui/icons/animated/<style>/<name>`) only where documented. Ultimate license at install. See [icons.md](./icons.md).
 
 ## The @reui registry
 
@@ -19,7 +18,7 @@ Premium installs need the authenticated form + `REUI_LICENSE_KEY` in `.env.local
 
 ## ReUI items vs shadcn/ui components
 
-- **ReUI items** (the components, `c-*` examples, blocks, Motion Icons) install as `@reui/<name>`.
+- **ReUI items** (the components, `c-*` examples and blocks) install as `@reui/<name>`.
 - **shadcn/ui components** that ReUI builds on (`button`, `dialog`, `select`, `card`, ...) are not ReUI items. They install from shadcn by bare name: `npx shadcn@latest add button --yes`.
 - **`badge` and `alert` exist in both registries.** `@reui/badge` and `@reui/alert` are ReUI's components (the extra variants in [components.md](./components.md)); bare `badge` and `alert` are shadcn's.
 - **In an item's `registryDependencies`**, a `@reui/<name>` entry is a ReUI item and a bare name is a shadcn/ui item. `add` installs both for you.
@@ -36,7 +35,7 @@ Blocks take surfaces, text and borders from your theme tokens, so a theme change
 ## Free vs premium
 
 - **Free, no license key:** the ReUI components, all `c-*` examples, and this skill.
-- **Premium, license required at install:** blocks (Pro or Ultimate) and Motion Icons (Ultimate). Set `REUI_LICENSE_KEY` (see [cli.md](./cli.md)).
+- **Premium, license required at install:** blocks (Pro or Ultimate). Set `REUI_LICENSE_KEY` (see [cli.md](./cli.md)).
 - **Templates** are downloads, not installs: free ones need only a ReUI account, and each template's page on reui.io says what the others need.
 
 ## Component API index

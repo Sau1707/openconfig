@@ -20,7 +20,7 @@ npx shadcn@latest search @reui -q "<intent or component>"
 
 Read descriptions and official previews before choosing. Confirm exact item names through search or docs; don't infer names from a category. Share official preview links when available.
 
-Components and `c-*` examples are free; blocks need Pro or Ultimate, Motion Icons need Ultimate. Prefer free components and examples when the user lacks a suitable license.
+Components and `c-*` examples are free; blocks need Pro or Ultimate. Prefer free components and examples when the user lacks a suitable license. Use `lucide-react` for icons.
 
 ## 2. Install
 
@@ -40,7 +40,7 @@ The CLI reads `components.json`, installs the correct base+style variant, resolv
 
 1. Read the added files and preserve their composition.
 2. Replace demo data and stubbed actions with real, typed data and behavior; see [adapting.md](./adapting.md).
-3. Match icon imports to the project's library; see [icons.md](./icons.md).
+3. Use `lucide-react` for icon imports; see [icons.md](./icons.md).
 4. Use the active theme's semantic tokens; see [color.md](./color.md).
 5. Check hierarchy, density, responsive behavior, and empty/loading/error states; see [layout.md](./layout.md) and [motion.md](./motion.md).
 6. Pass the local gates in [quality.md](./quality.md), review [anti-patterns.md](./anti-patterns.md), then typecheck and lint.
