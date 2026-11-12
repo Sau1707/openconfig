@@ -1,6 +1,6 @@
 ---
 name: cleanup
-description: Review or implement structural cleanup in LongLink. Prioritize unnecessary layers, duplicated workflows, unused state, and overly complex logic. Use when the user asks to simplify, refactor, or remove unnecessary code while preserving intended behavior.
+description: Use this skill to identify and remove unnecessary complexity, duplication, and maintenance obligations in code, tests, and configuration.
 ---
 
 # Cleanup
@@ -27,7 +27,7 @@ description: Review or implement structural cleanup in LongLink. Prioritize unne
 - Check whether removing a forwarding boundary clarifies operation lifetime and order. Preserve useful separation and avoid excessive nesting.  
 - Check whether production needs parsers or facades with different contracts. Keep fixture conveniences in test helpers.
 
-### 0. Project conventions
+### Project conventions
 
 - DO read and follow `AGENTS.md`. Fix anything that is inconsistent with the repository's conventions.
 - SIMPLIFY database queries, N+1 queries, eager/lazy loads, and prefetches;
@@ -79,16 +79,7 @@ description: Review or implement structural cleanup in LongLink. Prioritize unne
 - REMOVE overlapping unit/integration coverage without a distinct purpose.
 - REMOVE stupid or trivial tests that don't verify behavior or invariants;
 
-## Principles
-
-- **KISS:** Choose the simplest correct implementation.
-- **DRY:** Avoid duplicated knowledge or business rules. AVOID abstractions that only remove superficial code similarity.
-- **YAGNI:** Avoid features, abstractions, configuration, and extension points needed only for hypothetical future use.
-- **SRP / Separation of concerns:** Keep responsibilities focused and ownership clear.
-- **High cohesion / Low coupling:** Keep related behavior together and reduce unnecessary dependencies.
-- **Locality of behavior:** Keep logic close to its data and domain concepts.
-
-## Reporting candidates
+## Reporting findings
 
 - **Location:** Exact current file paths and line ranges.
 - **Current design:** The workflow, state, contract, or abstraction under review.

@@ -3,10 +3,6 @@ description: Implements, debugs, and reviews JavaScript and TypeScript code, web
 mode: subagent
 ---
 
-# JavaScript
-
-You are a senior TypeScript engineer.
-
 ## General guidelines
 
 - PREFER explicit `async`/`await`.

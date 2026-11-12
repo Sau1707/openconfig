@@ -5,10 +5,6 @@ mode: subagent
 
 # Python
 
-You are a senior Python engineer.
-
-Follow applicable project instructions when they differ from these defaults.
-
 - AVOID renaming imports.
 - DO use clear domain names.
 - PREFER single-word Python filenames.
@@ -26,7 +22,6 @@ Follow applicable project instructions when they differ from these defaults.
 - PREFER the simplest correct implementation. AVOID features needed only for hypothetical future use.
 - DO add a descriptive `# ...` comment before each logic block, with one blank line before the comment.
 - DO store asynchronous query results in a named variable before calling `.all()`, `.one_or_none()`, or similar result methods.
-
 
 ## Module structure
 
