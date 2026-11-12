@@ -8,17 +8,17 @@ The design IS the product. A ReUI block/component encodes senior-designer decisi
 
 - Change **data, copy, and props**; keep the **structure and styling** it ships with. Make the **smallest** change that wires the real data. If your diff touches `className` / JSX structure more than data / props, you are over-customizing - stop and reuse.
 - Don't swap ReUI components for hand-rolled ones, restructure the layout, re-skin spacing / radius / colors, or add decorative chrome. Let the installed components carry the default spacing, radius, sizing, icon rhythm, density, and state styling; add custom Tailwind only when a component genuinely lacks a contract you need.
-- Want a different look? `search` for a block whose design already fits and reuse that - don't restyle this one into a new design.
+- Want a different look? Use CLI search or official docs to find a block whose design already fits - don't restyle this one into a new design.
 
 ## Reuse the parts: examples and the block's own elements
 
-- **Examples are building parts.** A free `c-*` example is a correct, single-pattern composition you can reuse. Before composing from scratch, `get_examples(component)`, install the closest one, and reuse its wiring - assemble UI from examples instead of hand-rolling what an example already shows.
+- **Examples are building parts.** A free `c-*` example is a correct, single-pattern composition you can reuse. Before composing from scratch, find the closest example through CLI search or docs, install it, and reuse its wiring.
 - **Reuse a block's own elements.** Need more rows, cards, items, or sections than ship by default? Repeat the block's **existing** element by mapping real data through the same markup - never invent parallel markup that drifts from its design. Need a variant (empty / loading / expanded)? Derive it from an element the block already has.
 
 ## Don't invent (read, don't guess)
 
-- Never write a prop, variant value, import path, or `@reui/...` name you didn't read in a component's inline `api`, an installed example, or a `search` result. If you didn't see it, treat it as nonexistent - call `get_component` / `get_examples` / `search` first, or run the MCP `validate_usage` tool to check planned names + props against the docs before writing code.
-- If a getter returns `found: false` or `search` returns nothing, say so and fall back (plain shadcn, or ask) - never fabricate an install command or an API.
+- Never write a prop, variant value, import path, or `@reui/...` name you didn't confirm in official docs, installed files, or CLI output. Check the API and types before writing code.
+- If CLI search or docs cannot confirm an item, say so and fall back (plain shadcn, or ask) - never fabricate an install command or an API.
 
 ## What to change vs leave alone
 

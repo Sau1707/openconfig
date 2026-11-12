@@ -1,6 +1,6 @@
 # Quality gates (security, accessibility, scroll, self-checks)
 
-This is the **done gate**: before you call any ReUI work finished, call `get_audit_checklist` and pass every item below (plus the bar and the states in [layout.md](./layout.md)). Then run the self-checks, typecheck and lint, compare with [anti-patterns.md](./anti-patterns.md), and hand back in the 5 lines below.
+This is the **done gate**: before you call any ReUI work finished, pass every item below (plus the bar and the states in [layout.md](./layout.md)). Then run the self-checks, typecheck and lint, compare with [anti-patterns.md](./anti-patterns.md), and hand back in the 5 lines below.
 
 ## Security
 
@@ -50,8 +50,8 @@ No `rg` (a missing one also prints nothing): run each first pattern with your ow
 
 End your reply with these 5 lines:
 
-1. Installed: each item with its `previewUrl`.
+1. Installed: each item with its official preview link when available.
 2. Motion: each animated element and its [motion.md](./motion.md) table row, or "none".
 3. States: covered, or which are missing.
-4. Checks: C1 to C4, screenshots or "not visually verified", the audit checklist, typecheck, lint; each one run, or "not run" and why.
+4. Checks: C1 to C4, screenshots or "not visually verified", the local quality gates, typecheck, lint; each one run, or "not run" and why.
 5. Deviations: any rule broken or check hit left, with file:line and why.

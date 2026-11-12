@@ -29,16 +29,7 @@ REUI_LICENSE_KEY=your-license-key
 }
 ```
 
-The shadcn CLI expands `${REUI_LICENSE_KEY}` from `.env.local` inside `components.json`. MCP client configs expand environment variables too, but each client has its OWN syntax, so wire the ReUI MCP server with the form that client understands:
-
-- Claude Code (`.mcp.json`, `~/.claude.json`): `"Authorization": "Bearer ${REUI_LICENSE_KEY}"`
-- Cursor (`.cursor/mcp.json`) and VS Code: `"Authorization": "Bearer ${env:REUI_LICENSE_KEY}"`
-- OpenCode (`opencode.json`): `"Authorization": "Bearer {env:REUI_LICENSE_KEY}"`
-- Codex (`~/.codex/config.toml`): `bearer_token_env_var = "REUI_LICENSE_KEY"` - Codex reads the variable itself, so there is no header to write
-
-Only a client with no interpolation at all needs the raw `reui_pat_...` token, and then only in a file that is never committed. Copying the `components.json` form into a client that does not expand it is the common failure: the literal `${REUI_LICENSE_KEY}` placeholder is sent to the server as the credential and every call comes back 401.
-
-The MCP `get_project_context` tool returns the right config. Full guide: https://reui.io/docs/registry?ref=skill
+The shadcn CLI expands `${REUI_LICENSE_KEY}` from `.env.local` inside `components.json`. Keep the key out of committed files. Full guide: https://reui.io/docs/registry?ref=skill
 
 ## Installing
 
@@ -52,7 +43,7 @@ bunx --bun shadcn@latest add @reui/<name> --yes # bun
 
 `--yes` skips confirmation prompts. The CLI auto-detects the package manager from the lockfile (there is no `--package-manager` flag). It also resolves the correct base+style variant from `components.json`, so do not pass a style.
 
-`<name>` is the item name exactly as a ReUI tool returned it. The `@reui/` prefix is for ReUI items only:
+`<name>` is the item name confirmed by CLI search or official docs. The `@reui/` prefix is for ReUI items only:
 
 - The shadcn/ui components ReUI builds on (`button`, `dialog`, `select`, `card`, ...) are not ReUI items. Install them from shadcn by bare name: `npx shadcn@latest add button --yes`.
 - `badge` and `alert` exist in both registries: `@reui/badge` and `@reui/alert` are ReUI's components, bare `badge` and `alert` are shadcn's.
@@ -74,4 +65,4 @@ bunx --bun shadcn@latest add @reui/<name> --yes # bun
 
 If an install 401/403s, the license key is missing, invalid, or the plan does not cover that resource (blocks: Pro or higher; icons: Ultimate). Point the user to https://reui.io/account?ref=skill (their key) or https://reui.io/pricing?ref=skill (upgrade).
 
-If an install 404s, the name is not a ReUI item. Read the CLI's error message, which names the right install command when there is one, or look the name up with `get_install_command` or `search`.
+If an install 404s, read the CLI's error message and confirm the item name through `npx shadcn@latest search @reui -q "<name>"` or official docs; don't fabricate a replacement command.

@@ -44,7 +44,7 @@ Never add or change `duration-*`, `ease-*`, `animate-*` or `transition-*` on ins
 - At most 1 entrance animation per view (a stagger counts as 1), and every animation has a reduced-motion path. Feedback that appears after an action or a load (an Alert, a field error, a saved notice, data replacing its `Skeleton`) is a reveal, not an entrance: fade it in with the reveal row.
 - Never add named `duration-*` utilities or redefine `--ease-out`.
 - Loading: a `Skeleton` (it already pulses) in the real layout; a spinner only inside a busy button.
-- Motion Icons (Ultimate only): 1 on the primary action is the 1 hover flourish; install it with its `installAnimated` command; never retime it.
+- Motion Icons (Ultimate only): 1 on the primary action is the 1 hover flourish; use an animated variant confirmed by official docs or installed source; never retime it.
 
 ## Performance
 

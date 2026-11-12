@@ -29,7 +29,7 @@ An app shell around any of them is the shadcn `Sidebar`, which turns into a `She
 
 1. The ReUI component that owns the job: the router's Owners (`data-grid`, `filters`, `kanban`), `useFileUpload` from `@/hooks/use-file-upload` for file drop, or the one whose contract in [components.md](./components.md) matches.
 2. A shadcn/ui component (`Tabs`, `Dialog`, `AlertDialog`, `Sheet`, `Empty`, `Skeleton`, `sonner`).
-3. A free `c-*` example from `get_examples` that already composes it: install it and adapt.
+3. A free `c-*` example found through CLI search or official docs that already composes it: install it and adapt.
 4. Your own composition of those parts. Never a hand-rolled table, modal or tabs.
 
 Import ReUI parts file by file: `data-grid`, `filters`, `cascader`, `event-calendar` and `gantt` are folders with no index file. `data-grid`: the import line in [components.md](./components.md). `filters`, each from `@/components/reui/filters/<file>`: `Filters` from `filters`, `createFilterQuery` and `flattenFilterConditions` (1 argument, the query) from `filters-query`, the types `FilterField` and `FilterQuery` from `filters-types`.

@@ -1,8 +1,8 @@
 # ReUI components
 
-The ReUI components: `alert`, `autocomplete`, `badge`, `cascader`, `code-block`, `color-picker`, `data-grid`, `date-selector`, `emoji-picker`, `event-calendar`, `file-type`, `filters`, `frame`, `gantt`, `icon-stack`, `icon-tile`, `kanban`, `number-field`, `phone-input`, `rating`, `scrollspy`, `signature-pad`, `sortable`, `stepper`, `time-picker`, `timeline`, `tree`. Examples and blocks are composed from these. `file-upload` is a ReUI component too, shipped as the `use-file-upload` hook rather than a primitive, so it is not in that list: install it as `@reui/use-file-upload`, which writes `hooks/use-file-upload.ts` (import `useFileUpload` from `@/hooks/use-file-upload`), call `get_component("file-upload")` for its API and `get_examples("file-upload")` for its free examples. There is no `@reui/file-upload`: the UI is a `c-file-upload-<n>` example, and one built on the hook installs it.
+The ReUI components: `alert`, `autocomplete`, `badge`, `cascader`, `code-block`, `color-picker`, `data-grid`, `date-selector`, `emoji-picker`, `event-calendar`, `file-type`, `filters`, `frame`, `gantt`, `icon-stack`, `icon-tile`, `kanban`, `number-field`, `phone-input`, `rating`, `scrollspy`, `signature-pad`, `sortable`, `stepper`, `time-picker`, `timeline`, `tree`. Examples and blocks are composed from these. `file-upload` is a ReUI component too, shipped as the `use-file-upload` hook rather than a primitive, so it is not in that list: install it as `@reui/use-file-upload`, which writes `hooks/use-file-upload.ts` (import `useFileUpload` from `@/hooks/use-file-upload`). Find its API in official docs and free examples through CLI search. There is no `@reui/file-upload`: the UI is a `c-file-upload-<n>` example, and one built on the hook installs it.
 
-**Rule one: never guess a component's API.** Call **`get_component(name)`** for its inline `api` and share its `docsUrl` with the user, then **`get_examples(name)`** and copy a worked example. The contracts below are first-try orientation (required props, shape, the one gotcha); the `api` is the reference. A large `api` (`cascader`, `filters`, `data-grid`) is trimmed on heading boundaries: `sectionsOmitted` names what was dropped and the response's `next` hint pulls it back. `validate_usage` always checks the full API. No single block fits? Compose from components, 1 `get_examples` example each ([compose.md](./compose.md)).
+**Rule one: never guess a component's API.** Find its official documentation through https://reui.io/llms.txt and confirm exports, props and types in the installed files. Share the relevant docs link with the user. The contracts below are first-try orientation (required props, shape, the one gotcha); the docs and installed API are the reference. Find a worked `c-*` example through CLI search or docs and copy its wiring. No single block fits? Compose from components and relevant examples ([compose.md](./compose.md)).
 
 ## data-grid (the flagship - read its API every time)
 
@@ -176,7 +176,7 @@ const [value, setValue] = useState<DateSelectorValue | undefined>()
 <DateSelector value={value} onChange={setValue} label="Due date" />
 ```
 
-**Gotcha:** the value is a structured `DateSelectorValue` (period / operator / start+end dates), NOT a `Date` - never pass a raw `Date`. Use `allowRange={false}` to lock single-date picking. Read `get_component("date-selector")` for the value shape.
+**Gotcha:** the value is a structured `DateSelectorValue` (period / operator / start+end dates), NOT a `Date` - never pass a raw `Date`. Use `allowRange={false}` to lock single-date picking. Read the official docs and installed `DateSelectorValue` type for the value shape.
 
 ## tree
 
@@ -518,4 +518,4 @@ Every component ships a `base` (Base UI) and a `radix` (Radix UI) build under 1 
 - `Select`: Base UI takes `items`; Radix uses `<SelectItem>` children.
 - `ToggleGroup`: Base UI `multiple` boolean vs Radix `type="single" | "multiple"`.
 
-Installed files and `c-*` examples are already in your base: reuse their wiring. When an `api` or example shows the other base's shape, translate it (or `validate_usage` to confirm).
+Installed files and `c-*` examples are already in your base: reuse their wiring. When docs or an example show the other base's shape, confirm the equivalent API in your installed types before translating.
