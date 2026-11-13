@@ -33,9 +33,9 @@ Then build exactly that plan; if you deviate, say where.
 ## The loop
 
 1. **Find**: plan full-page regions with [compose.md](./rules/compose.md), then run `npx shadcn@latest search @reui -q "<intent>"` for matching items.
-2. **Install**: `npx shadcn@latest add @reui/<name> --yes`, with `<name>` confirmed by CLI search or official docs (shadcn/ui parts install by bare name: `npx shadcn@latest add button --yes`).
-3. **Read the API on your base**: `components.json` style `base-nova` is Base UI, `radix-nova` is Radix. Find the matching docs through https://reui.io/llms.txt, then read the installed component and a relevant `c-*` example.
-4. **Adapt**: change data, copy and props; keep the structure and classes.
+2. **Install**: `npx shadcn@latest add @reui/<name> --yes`, with `<name>` confirmed by CLI search or official docs. Use plain shadcn for generic controls such as Button, Dialog and Select; install those by bare name (`button`). See [cli.md](./rules/cli.md) for registry setup, package runners and safe installation in existing projects.
+3. **Read the API on your base**: `components.json` style `base-nova` is Base UI, `radix-nova` is Radix. Find the matching docs through https://reui.io/llms.txt, then read the installed component's exports and types and a relevant `c-*` example (install it if needed). Share the relevant API docs link.
+4. **Adapt**: replace demo data and stubbed actions with real, typed data and behavior; keep the structure and classes. See [adapting.md](./rules/adapting.md).
 5. **Check**, after every UI edit, follow-ups included: verify unfamiliar names and props against docs or installed types, run the gates and self-checks C1 to C4 in [quality.md](./rules/quality.md), review [anti-patterns.md](./rules/anti-patterns.md), typecheck and lint. Hand back in the 5 lines quality.md gives.
 
 Share an item's official preview link when available; don't invent URLs.
@@ -62,7 +62,6 @@ Open the local topic files below.
 | Topic           | File                                             | Read when                                    |
 | --------------- | ------------------------------------------------ | -------------------------------------------- |
 | `compose`       | [rules/compose.md](./rules/compose.md)             | before building any screen or section        |
-| `workflow`      | [rules/workflow.md](./rules/workflow.md)           | discovery, API docs, installing              |
 | `adapting`      | [rules/adapting.md](./rules/adapting.md)           | changing an installed example                |
 | `components`    | [rules/components.md](./rules/components.md)       | `data-grid`, `filters`, `kanban` and the rest |
 | `color`         | [rules/color.md](./rules/color.md)                 | any color, status, chart or dark mode choice |
@@ -72,5 +71,4 @@ Open the local topic files below.
 | `icons`         | [rules/icons.md](./rules/icons.md)                 | Lucide imports and icon placement            |
 | `quality`       | [rules/quality.md](./rules/quality.md)             | the done gate: self-checks, a11y, hand-back   |
 | `anti-patterns` | [rules/anti-patterns.md](./rules/anti-patterns.md) | the Check step: drift pairs, stale habits    |
-| `registry`      | [rules/registry.md](./rules/registry.md)           | registry names, base vs radix                |
-| `cli`           | [rules/cli.md](./rules/cli.md)                     | `components.json`, install flags              |
+| `cli`           | [rules/cli.md](./rules/cli.md)                     | registry setup, install flags and errors     |

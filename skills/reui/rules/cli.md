@@ -1,8 +1,10 @@
 # CLI: public registry setup and non-interactive install
 
+For discovery, API lookup and adaptation, follow [the loop in SKILL.md](../SKILL.md#the-loop).
+
 ## Registry setup (one-time, per project)
 
-Free items (the ReUI components and all `c-*` examples) need only the plain string registry in `components.json`:
+ReUI components provide APIs; free `c-*` examples compose them into reusable patterns. Either can be installed directly. They need only the plain string registry in `components.json`:
 
 ```json
 { "registries": { "@reui": "https://reui.io/r/{style}/{name}.json" } }
@@ -18,9 +20,9 @@ pnpm dlx shadcn@latest add @reui/<name> --yes  # pnpm
 bunx --bun shadcn@latest add @reui/<name> --yes # bun
 ```
 
-`--yes` skips confirmation prompts. The CLI auto-detects the package manager from the lockfile (there is no `--package-manager` flag). It also resolves the correct base+style variant from `components.json`, so do not pass a style.
+Run from the project root so `components.json` is found. `--yes` skips confirmation prompts. The CLI auto-detects the package manager from the lockfile (there is no `--package-manager` flag), resolves dependencies, rewrites aliases and selects the base+style variant from `components.json`; do not pass a base or style.
 
-`<name>` must be a free component or `c-*` example confirmed by CLI search or official docs. The `@reui/` prefix is for ReUI items only:
+The `@reui/` prefix is for ReUI items only:
 
 - The shadcn/ui components ReUI builds on (`button`, `dialog`, `select`, `card`, ...) are not ReUI items. Install them from shadcn by bare name: `npx shadcn@latest add button --yes`.
 - `badge` and `alert` exist in both registries: `@reui/badge` and `@reui/alert` are ReUI's components, bare `badge` and `alert` are shadcn's.
@@ -28,10 +30,8 @@ bunx --bun shadcn@latest add @reui/<name> --yes # bun
 
 ## Handling prompts and conflicts
 
-- **Always pass `--yes`** so the CLI does not block on confirmation prompts.
 - **Do NOT pass `--overwrite` by default.** If the CLI reports an existing file, read the output and resolve deliberately: install under a different name, adjust the path, or ask the user. Only use `--overwrite` when the user explicitly wants to replace a file.
 - **Preview first when touching an existing project**: `npx shadcn@latest add @reui/<name> --dry-run` shows what would change; `--diff <file>` shows a specific file's diff. Use these before overwriting.
-- Run from the **project root** so `components.json` is found.
 
 ## Install errors
 
