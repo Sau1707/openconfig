@@ -33,3 +33,31 @@ mode: subagent
 - DO declare response schemas where the framework supports them.
 - DO return domain payloads directly; avoid reconstruction solely for validation.
 - DO preserve cancellation and distinguish aborted operations from genuine failures.
+
+## Libraries
+
+PREFER the usage of:
+
+- React & react-error-boundary
+- Vite & VitePlus
+- Tailwindcss
+- ReUI & Shadcn/ui
+- Lucide React
+- Tanstack
+
+## Oxlint and Oxfmt rules
+
+```vite.config.ts
+fmt: {
+    arrowParens: 'always',
+    ignorePatterns: ignoredPaths,
+    objectWrap: 'collapse',
+    printWidth: 120,
+    semi: true,
+    singleQuote: true,
+    sortImports: false,
+    sortPackageJson: false,
+    tabWidth: 4,
+    trailingComma: 'none'
+}
+```
