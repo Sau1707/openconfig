@@ -1,6 +1,8 @@
 # Global Opencode Agents Instructions
 
 - MINIMIZE comment to the bare minimun.
+- AVOID unnecessary UI microcopy or decorative text elements.
+- AVOID eyebrow text, overlines, slogans, taglines, promotional phrases, filler text, disclaimers, or informational labels unless necessary
 - USE the browser MCP to control the browser
 - AVOID extra comments that a human wouldn't add or is inconsistent with the rest of the file
 - DO NOT add tests cases that merely:
@@ -31,3 +33,4 @@
 ## Before completing a task
 
 - DO check for broken spacing or padding and fix it
+- ENSURE that every text element must serve a clear functional purpose
