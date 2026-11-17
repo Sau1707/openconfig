@@ -1,7 +1,7 @@
 ---
 description: Publish the current changes as a GitHub pull request without merging it.
 agent: build
-model: openai/gpt-6.1-sol#medium
+model: openai/gpt-6.2-sol#medium
 subagent: false
 ---
 
