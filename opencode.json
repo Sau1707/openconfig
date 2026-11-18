@@ -5,7 +5,6 @@
   "small_model": "openai/gpt-6-luna",
   "plugins": ["opencode-gpt-live"],
   "experimental": {
-    "subagent_depth": 2,
     "image_generate": {
       "model": "openai/gpt-image-2"
     }

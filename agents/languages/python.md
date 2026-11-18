@@ -1,15 +1,9 @@
 ---
 description: Implements, debugs, and reviews Python code, tests, APIs, scripts, and tooling.
 mode: subagent
-permissions:
-  - action: subagent
-    resource: "*"
-    effect: deny
 ---
 
 # Python
-
-Complete the parent agent's bounded task and report findings, changes, and verification. Do not edit files on discovery-only tasks.
 
 - AVOID renaming imports.
 - DO use clear domain names.

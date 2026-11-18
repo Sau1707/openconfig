@@ -27,10 +27,8 @@
 
 ## Sub-Agents
 
-- `subagents/loop`: Delegate improvement discovery here when the user asks for useful implementation candidates. Present its findings to the user before authorizing edits.
-- `nested/javascript`: JavaScript/TypeScript helper for Loop or other subagents.
-- `nested/python`: Python helper for Loop or other subagents.
-- Give helpers bounded tasks and explicit edit authorization; keep unrelated work unchanged.
+- python: Contains instructions on how to work with python code
+- javascript: Contains instructions on how to work with python code Js/Ts code
 
 ## Before completing a task
 
