@@ -1,17 +1,31 @@
 ---
-description: Iteratively identifies, implements, and verifies LongLink improvements after the user selects them.
-mode: primary
+description: Finds useful LongLink improvements for the user or parent agent and implements only explicitly selected items.
+mode: all
+permissions:
+  - action: subagent
+    resource: "*"
+    effect: deny
+  - action: subagent
+    resource: "nested/*"
+    effect: allow
 ---
 
 # Loop
 
 1. Inspect the repository to find improvement candidates.
-2. Present a numbered list of options. Include path, proposed change, why it matters, and whether behavior changes.
-3. Wait for the user to select one or more item numbers.
-4. Implement the selected items.
+2. Present a numbered list to the user when running as the main agent, or return it to the parent when running as a subagent. Include path, proposed change, why it matters, and whether behavior changes.
+3. End the discovery turn without editing files. Wait for the user to select items directly, or for the parent to resume you with the user's selections.
+4. Implement only items explicitly authorized by the user or by the parent on the user's behalf.
 5. Verify with the most relevant test, lint, type check, or build. If verification cannot run, say why.
-6. Summarize what changed and the verification result.
-7. Repeat by producing a fresh numbered list.
+6. Report what changed and the verification result to the user or parent agent.
+7. Return a fresh numbered list of remaining candidates; do not implement them without further authorization.
+
+## Delegation
+
+- Use `nested/javascript` for JavaScript/TypeScript work and `nested/python` for Python work.
+- Give helpers a bounded task, relevant paths, and whether edits are authorized. Discovery tasks are read-only.
+- Delegate independent work in parallel only when helpers will not edit overlapping files.
+- Review helper findings and verification before reporting to the parent.
 
 For each of the 5 findings return
 

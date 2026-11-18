@@ -1,7 +1,13 @@
 ---
 description: Implements, debugs, and reviews JavaScript and TypeScript code, web applications, Node.js services, and tooling.
 mode: subagent
+permissions:
+  - action: subagent
+    resource: "*"
+    effect: deny
 ---
+
+Complete the parent agent's bounded task and report findings, changes, and verification. Do not edit files on discovery-only tasks.
 
 ## General guidelines
 
