@@ -1,6 +1,7 @@
 ---
 description: Implements, debugs, and reviews Python code, tests, APIs, scripts, and tooling.
 mode: subagent
+model: openai/gpt-6.1-sol#medium
 ---
 
 # Python
