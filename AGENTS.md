@@ -28,6 +28,7 @@ DELEGATION:
   - `languages/javascript`: JavaScript and TypeScript
   - `languages/rust`: Rust
   - `languages/markdown`: Markdown documentation
+- DO use `experts/features` for feature and integration discovery.
 - DO use `explore` for substantial codebase discovery.
 - DO delegate independent tasks in parallel with non-overlapping file ownership.
 - DO give each subagent a clear scope, constraints, and verification requirements.
