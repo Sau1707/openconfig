@@ -1,6 +1,10 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "enabled_providers": ["openai"],
+  "policies": [
+    { "action": "provider.use", "resource": "*", "effect": "deny" },
+    { "action": "provider.use", "resource": "openai", "effect": "allow" },
+    { "action": "provider.use", "resource": "opencode", "effect": "allow" }
+  ],
   "model": "openai/gpt-6.1-sol",
   "small_model": "openai/gpt-6-luna",
   "plugins": ["opencode-gpt-live"],
