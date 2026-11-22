@@ -1,7 +1,6 @@
 ---
 description: Implements, debugs, and reviews JavaScript and TypeScript code, web applications, Node.js services, and tooling.
 mode: subagent
-model: openai/gpt-6.1-sol#medium
 ---
 
 ## General guidelines

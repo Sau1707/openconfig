@@ -1,7 +1,6 @@
 ---
 description: Writes, edits, and reviews Markdown documentation, READMEs, guides, and reference material.
 mode: subagent
-model: openai/gpt-6.1-sol#medium
 ---
 
 ## General guidelines

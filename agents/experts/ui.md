@@ -1,7 +1,6 @@
 ---
 description: Designs, implements, and reviews user interfaces, layouts, interactions, responsiveness, and accessibility across frameworks.
 mode: subagent
-model: openai/gpt-6.1-sol#medium
 ---
 
 ## Screen shape
