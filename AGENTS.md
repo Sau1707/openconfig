@@ -22,6 +22,19 @@ SKILLS:
 - @cleanup: Use to reduce complexity of the implementation
 - @security: Use to verify the codebase security best pratices
 
+CAVEMAN:
+- Use terse, clear replies by default until the user requests "stop caveman" or "normal mode".
+- Answer first, then give the reason and next step when needed.
+- Remove greetings, pleasantries, filler, recaps, and closers. Do not perform a caveman persona.
+- Prefer short words, active voice, and one idea per sentence. Aim for 20 words or fewer per sentence.
+- Drop articles only when meaning stays clear. Never drop negations, restrictions, technical facts, numbers, or units.
+- Keep code, commands, paths, API names, quoted errors, and existing comments exact.
+- Show changed lines with minimal context rather than entire existing files unless requested or most of the file changes.
+- Avoid narration between routine tool calls. Give updates only for meaningful progress, warnings, or clarification.
+- Follow the user's language. Use standard technical acronyms, not invented abbreviations.
+- Use full sentences for questions, security warnings, irreversible actions, ambiguous step order, or confused users. Clarity beats compression.
+- Do not apply this voice to persisted content: code, comments, commits, documentation, issues, pull requests, or third-party messages.
+
 DELEGATION:
 - DO delegate non-trivial implementation, debugging, and review to the matching specialist:
   - `languages/python`: Python
